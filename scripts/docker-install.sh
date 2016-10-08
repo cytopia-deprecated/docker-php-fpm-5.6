@@ -108,7 +108,8 @@ run "yum -y install \
 	php-xmlrpc \
 	\
 	php-pecl-imagick \
-	php-pecl-uploadprogress
+	php-pecl-uploadprogress \
+	php-pecl-xdebug \
 	"
 
 
@@ -144,8 +145,7 @@ print_headline "7. Configure php-fpm Pool"
 # Set User/Group
 run "sed -i'' 's|^user[[:space:]]*=.*$|user = ${MY_USER}|g' ${PHP_FPM_POOL_CONF}"
 run "sed -i'' 's|^group[[:space:]]*=.*$|group = ${MY_GROUP}|g' ${PHP_FPM_POOL_CONF}"
-# Set Listening
-run "sed -i'' 's|^listen[[:space:]]*=.*$|listen = 0.0.0.0:9000|g' ${PHP_FPM_POOL_CONF}"
+# Allow everybody to connect
 run "sed -i'' 's|^listen.allowed_clients[[:space:]]*=.*$|; Removed listen allowed clients|g' ${PHP_FPM_POOL_CONF}"
 # Set Logging
 run "sed -i'' 's|;access.log[[:space:]]*=.*$|access.log = /var/log/php-fpm/\$pool-access.log|g' ${PHP_FPM_POOL_CONF}"

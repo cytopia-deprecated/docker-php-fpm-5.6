@@ -17,3 +17,31 @@ RUN /docker-install.sh
 
 # Autostart
 ENTRYPOINT ["/docker-entrypoint.sh"]
+
+
+
+##
+## Volumes
+##
+VOLUME /var/log/php-fpm
+
+
+##
+## Entrypoint
+##
+ENTRYPOINT ["/docker-entrypoint.sh"]
+
+
+##
+## Ports
+##
+# xdebug
+EXPOSE 9000
+# php-fpm
+EXPOSE 9001
+
+
+##
+## Start
+##
+#CMD ["/usr/sbin/php-fpm -F"]
