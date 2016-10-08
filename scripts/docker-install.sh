@@ -1,8 +1,8 @@
 #!/bin/sh -eu
 
-##
-## Variables
-##
+###
+### Variables
+###
 PHP_FPM_POOL_CONF="/etc/php-fpm.d/www.conf"
 PHP_FPM_CONF="/etc/php-fpm.conf"
 
@@ -12,10 +12,9 @@ MY_UID="48"
 MY_GID="48"
 
 
-##
-## Functions
-##
-
+###
+### Functions
+###
 print_headline() {
 	_txt="${1}"
 	_blue="\033[0;34m"
@@ -44,9 +43,9 @@ run() {
 ################################################################################
 
 
-##
-## Adding Users
-##
+###
+### Adding Users
+###
 print_headline "1. Adding Users"
 run "groupadd -g ${MY_GID} -r ${MY_GROUP}"
 run "adduser ${MY_USER} -u ${MY_UID} -M -s /sbin/nologin -g ${MY_GROUP}"
@@ -79,6 +78,8 @@ run "yum -y update"
 ###
 ### Installing Packages
 ###
+### (postfix provides /usr/sbin/sendmail)
+###
 print_headline "4. Installing Packages"
 run "yum -y install \
 	php \
@@ -110,7 +111,10 @@ run "yum -y install \
 	php-pecl-imagick \
 	php-pecl-uploadprogress \
 	php-pecl-xdebug \
+	\
+	postfix\
 	"
+
 
 
 ###
@@ -123,8 +127,6 @@ run "sed -i'' 's/^;cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/g' /etc/php.ini"
 
 # Needed for PHP to read out docker-compose variables
 run "sed -i'' 's/^variables_order[[:space:]]*=.*/variables_order = EGPCS/g' /etc/php.ini"
-
-
 
 
 
@@ -156,10 +158,16 @@ run "sed -i'' 's|^;clear_env[[:space:]]*=.*$|clear_env = no|g' ${PHP_FPM_POOL_CO
 
 
 
-
 ###
 ### Installing Socat (for tunneling remote mysql to localhost)
 ###
 print_headline "8. Installing Socat"
 run "yum -y install socat"
 
+
+
+###
+### Cleanup unecessary packages
+###
+print_headline "9. Cleanup unecessary packages"
+run "yum -y autoremove"
