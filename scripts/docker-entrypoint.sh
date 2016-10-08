@@ -275,7 +275,7 @@ if ! set | grep '^PHP_MAX_INPUT_VARS=' >/dev/null 2>&1; then
 	log "info" "\$PHP_MAX_INPUT_VARS not set. Keeping default"
 else
 	log "info" "Setting PHP: max_input_vars=${PHP_MAX_INPUT_VARS}"
-	run "sed -i'' 's|^max_input_vars[[:space:]]*=.*$|max_input_vars = ${PHP_MAX_INPUT_VARS}|g' /etc/php.ini"
+	run "sed -i'' 's|.*max_input_vars[[:space:]]*=.*$|max_input_vars = ${PHP_MAX_INPUT_VARS}|g' /etc/php.ini"
 fi
 
 
@@ -417,5 +417,5 @@ fi
 ###
 ### Start
 ###
-log "info" "Starting $(php-fpm -v 2>&1 | head -1) on $(hostname -I)"
+log "info" "Starting $(php-fpm -v 2>&1 | head -1)"
 run "/usr/sbin/php-fpm -F" "1"
