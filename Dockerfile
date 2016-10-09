@@ -11,9 +11,9 @@ MAINTAINER "cytopia" <cytopia@everythingcli.org>
 LABEL \
 	name="cytopia's PHP-FPM 5.6 Image" \
 	image="php-fpm-5.6" \
-    vendor="cytopia" \
-    license="MIT" \
-    build-date="2016-10-09"
+	vendor="cytopia" \
+	license="MIT" \
+	build-date="2016-10-09"
 
 
 ##
