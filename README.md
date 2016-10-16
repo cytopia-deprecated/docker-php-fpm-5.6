@@ -26,6 +26,12 @@ Add php config directory to overwrite php.ini directives during startup.
 $ docker run -i -v ~/.etc/php.d:/etc/php-custom.d -t cytopia/php-fpm-5.6
 ```
 
+Mount a MySQL socket, (from `~/run/mysqld`) so you can use php's `mysql[i]` functions to connect to `localhost`:
+```shell
+$ docker run -i -v ~/run/mysqld:/var/run/mysqld -e MOUNT_MYSQL_SOCKET_TO_LOCALDISK=1 -e MYSQL_SOCKET_PATH=/var/run/mysqld -t cytopia/php-fpm-5.6
+```
+
+
 
 ## Options
 
