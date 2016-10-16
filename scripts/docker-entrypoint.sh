@@ -5,15 +5,14 @@
 ###
 DEBUG_COMMANDS=0
 
-
 # If $PHP_CUST_CONF_DIR is mounted from the
 # host, all *.ini files from $PHP_CUST_CONF_DIR
 # will be copied to $PHP_CONF_DIR
 PHP_CONF_DIR="/etc/php.d"				# Default php config dir
 PHP_CUST_CONF_DIR="/etc/php-custom.d"	# Custom php directory to look for *.ini files
 
-
 PHP_XDEBUG_DEFAULT_PORT="9000"
+
 
 
 ###
