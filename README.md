@@ -47,7 +47,7 @@ $ docker run -i -v ~/.etc/php.d:/etc/php-custom.d -t cytopia/php-fpm-5.6
 | MYSQL_REMOTE_PORT | int | `` | The remote port of the MySQL host from which to port-forward.<br/>This is required if $FORWARD_MYSQL_PORT_TO_LOCALHOST is turned on. |
 | MYSQL_LOCAL_PORT | int | `` | Forward the MySQL port to `127.0.0.1` to the specified local port.<br/>This is required if $FORWARD_MYSQL_PORT_TO_LOCALHOST is turned on. |
 | MOUNT_MYSQL_SOCKET_TO_LOCALDISK | bool | `0` | Mount a remote MySQL server socket to local disk on this docker.<br/>Value: `0` or `1` |
-| MYSQL_SOCKET_PATH | string | ``| Full socket path where the MySQL socket has been mounted on this docker.<br/>This is recommended to adjust if $MOUNT_MYSQL_SOCKET_TO_LOCALDISK is turned on. |
+| MYSQL_SOCKET_PATH | string | `` | Full socket path where the MySQL socket has been mounted on this docker.<br/>This is recommended to adjust if $MOUNT_MYSQL_SOCKET_TO_LOCALDISK is turned on. |
 | PHP_XDEBUG_ENABLE | bool | `0` | Enable Xdebug.<br/>Value: `0` or `1` |
 | PHP_XDEBUG_REMOTE_PORT | int | `9000` | The port on your Host (where you run the IDE/editor to which xdebug should connect.) |
 | PHP_XDEBUG_REMOTE_HOST | string | `` | The IP address of your Host (where you run the IDE/editor to which xdebug should connect).<br/>This is required if $PHP_DEBUG_ENABLE is turned on. |
