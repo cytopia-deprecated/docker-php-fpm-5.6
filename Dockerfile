@@ -13,7 +13,7 @@ LABEL \
 	image="php-fpm-5.6" \
 	vendor="cytopia" \
 	license="MIT" \
-	build-date="2016-10-11"
+	build-date="2016-10-16"
 
 
 ##
@@ -39,6 +39,7 @@ EXPOSE 9000
 ## Volumes
 ##
 VOLUME /var/log/php-fpm
+VOLUME /etc/php-custom.d
 
 
 ##

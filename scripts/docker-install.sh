@@ -6,6 +6,10 @@
 PHP_FPM_POOL_CONF="/etc/php-fpm.d/www.conf"
 PHP_FPM_CONF="/etc/php-fpm.conf"
 
+
+# Custom php directory to look for *.ini files
+PHP_CUST_CONF_DIR="/etc/php-custom.d"
+
 MY_USER="apache"
 MY_GROUP="apache"
 MY_UID="48"
@@ -134,6 +138,10 @@ run "sed -i'' 's/^;cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/g' /etc/php.ini"
 # Needed for PHP to read out docker-compose variables
 run "sed -i'' 's/^variables_order[[:space:]]*=.*$/variables_order = EGPCS/g' /etc/php.ini"
 
+# Add custom php configuration directory
+if [ ! -d "${PHP_CUST_CONF_DIR}" ]; then
+	run "mkdir -p ${PHP_CUST_CONF_DIR}"
+fi
 
 
 ###
@@ -161,6 +169,9 @@ run "sed -i'' '/;access.format[[:space:]]*=.*$/s/^;//' ${PHP_FPM_POOL_CONF}"
 run "sed -i'' 's|^;catch_workers_output[[:space:]]*=.*$|catch_workers_output = yes|g' ${PHP_FPM_POOL_CONF}"
 # Prevent PHP-FPM from clearing docker-compose environmental variables
 run "sed -i'' 's|^;clear_env[[:space:]]*=.*$|clear_env = no|g' ${PHP_FPM_POOL_CONF}"
+# Adding default listening directive
+run "sed -i'' 's|^listen[[:space:]]*=.*$|listen = 0.0.0.0:9000|g' ${PHP_FPM_POOL_CONF}"
+
 
 
 
