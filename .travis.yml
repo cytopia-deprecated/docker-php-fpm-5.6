@@ -27,6 +27,9 @@ install:
   # Show Docker version
   - docker version
 
+  # Get dependencies
+  - docker pull cytopia/mysql-5.5
+
   # Build my docker
   - docker build -t cytopia/${MY_DOCKER_NAME} .
 
@@ -181,4 +184,50 @@ script:
   - docker exec ${MY_DOCKER_NAME} php -r "printf(\"%s\n\", ini_get('upload_max_filesize'));" | grep '2048'
 
   - docker stop "$( docker ps | grep  "${MY_DOCKER_NAME}" | awk '{print $1}' )"
+  - docker rm "${MY_DOCKER_NAME}"
+  ##
+  ## 04.) [b](SILENT) Custom configuration
+  ##
+  - printf "[PHP]\n%s\n" "upload_max_filesize = 2048M" > ${MY_CONFIG_DIR}/custom.ini
+
+  - docker run
+      -v ${MY_CONFIG_DIR}:/etc/php-custom.d
+      --name ${MY_DOCKER_NAME} cytopia/${MY_DOCKER_NAME} &
+  - sleep 5
+  - docker ps
+
+  # Test custom configuration
+  - docker exec ${MY_DOCKER_NAME} php -r "printf(\"%s\n\", ini_get('upload_max_filesize'));" | grep '2048'
+
+  - docker stop "$( docker ps | grep  "${MY_DOCKER_NAME}" | awk '{print $1}' )"
+  - docker rm "${MY_DOCKER_NAME}"
+
+
+
+  ##
+  ## 05.) [a](DEBUG) Test MySQL 127.0.0.1 port-forwarding
+  ##
+  - docker run
+      -e MYSQL_ROOT_PASSWORD=
+      --name mysql cytopia/mysql-5.5 &
+  - sleep 15
+
+  - docker run
+      -v ${MY_CONFIG_DIR}:/etc/php-custom.d
+      -e DEBUG_COMPOSE_ENTRYPOINT=1
+      -e FORWARD_MYSQL_PORT_TO_LOCALHOST=1
+      -e MYSQL_REMOTE_ADDR=mysql
+      -e MYSQL_REMOTE_PORT=3306
+      -e MYSQL_LOCAL_PORT=3306
+      --link mysql
+      --name ${MY_DOCKER_NAME} cytopia/${MY_DOCKER_NAME} &
+  - sleep 5
+  - docker ps
+
+  # Test 127.0.0.1 MySQL connection
+  - docker exec ${MY_DOCKER_NAME} php -r "if (mysqli_connect('127.0.0.1', 'root', '')) echo \"YES\n\"; else echo \"NO\n\";" | grep 'YES'
+
+  - docker stop "$( docker ps | grep  "mysql" | awk '{print $1}' )"
+  - docker stop "$( docker ps | grep  "${MY_DOCKER_NAME}" | awk '{print $1}' )"
+  - docker rm "mysql"
   - docker rm "${MY_DOCKER_NAME}"
