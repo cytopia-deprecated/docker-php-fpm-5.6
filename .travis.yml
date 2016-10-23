@@ -284,7 +284,7 @@ script:
       -v ${MY_SOCKET_DIR}:/tmp/mysql-sock
       -e DEBUG_COMPOSE_ENTRYPOINT=1
       -e MOUNT_MYSQL_SOCKET_TO_LOCALDISK=1
-      -e MYSQL_SOCKET_PATH=${MY_SOCKET_DIR}/mysqld.sock
+      -e MYSQL_SOCKET_PATH=/tmp/mysql-sock/mysqld.sock
       --link mysql
       --name ${MY_DOCKER_NAME} cytopia/${MY_DOCKER_NAME} &
   - sleep 5
