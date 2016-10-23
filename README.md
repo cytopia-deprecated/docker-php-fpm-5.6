@@ -1,6 +1,6 @@
 # PHP-FPM 5.6 Docker
 
-[![](https://images.microbadger.com/badges/version/cytopia/php-fpm-5.6.svg)](https://microbadger.com/images/cytopia/php-fpm-5.6 "php-fpm-5.6") [![](https://images.microbadger.com/badges/image/cytopia/php-fpm-5.6.svg)](https://microbadger.com/images/cytopia/php-fpm-5.6 "php-fpm-5.6") [![](https://images.microbadger.com/badges/license/cytopia/php-fpm-5.6.svg)](https://microbadger.com/images/cytopia/php-fpm-5.6 "php-fpm-5.6")
+[![Build Status](https://travis-ci.org/cytopia/docker-php-fpm-5.6.svg?branch=master)](https://travis-ci.org/cytopia/docker-php-fpm-5.6) [![](https://images.microbadger.com/badges/version/cytopia/php-fpm-5.6.svg)](https://microbadger.com/images/cytopia/php-fpm-5.6 "php-fpm-5.6") [![](https://images.microbadger.com/badges/image/cytopia/php-fpm-5.6.svg)](https://microbadger.com/images/cytopia/php-fpm-5.6 "php-fpm-5.6") [![](https://images.microbadger.com/badges/license/cytopia/php-fpm-5.6.svg)](https://microbadger.com/images/cytopia/php-fpm-5.6 "php-fpm-5.6")
 
 [![cytopia/php-fpm-5.6](http://dockeri.co/image/cytopia/php-fpm-5.6)](https://hub.docker.com/r/cytopia/php-fpm-5.6/)
 
@@ -8,33 +8,15 @@
 
 ----
 
-PHP-FPM 5.6 Docker on CentOS 7
+**PHP-FPM 5.6 Docker on CentOS 7**
 
-This docker image is part of the **[devilbox](https://github.com/cytopia/devilbox)**
+[![Devilbox](https://raw.githubusercontent.com/cytopia/devilbox/master/.devilbox/www/htdocs/assets/img/devilbox_80.png)](https://github.com/cytopia/devilbox)
+
+<sub>This docker image is part of the **[devilbox](https://github.com/cytopia/devilbox)**</sub>
 
 ----
 
-## Usage
-
-Simple usage
-```shell
-$ docker run -i -t cytopia/php-fpm-5.6
-```
-
-Add php config directory to overwrite php.ini directives during startup.
-```shell
-$ docker run -i -v ~/.etc/php.d:/etc/php-custom.d -t cytopia/php-fpm-5.6
-```
-
-Mount a MySQL socket, (from `~/run/mysqld`) so you can use php's `mysql[i]` functions to connect to `localhost`:
-```shell
-$ docker run -i -v ~/run/mysqld:/var/run/mysqld -e MOUNT_MYSQL_SOCKET_TO_LOCALDISK=1 -e MYSQL_SOCKET_PATH=/var/run/mysqld/mysqld.sock -t cytopia/php-fpm-5.6
-```
-
-
-
 ## Options
-
 
 ### Environmental variables
 
@@ -70,3 +52,58 @@ $ docker run -i -v ~/run/mysqld:/var/run/mysqld -e MOUNT_MYSQL_SOCKET_TO_LOCALDI
 | Docker | Description |
 |--------|-------------|
 | 9000   | PHP-FPM listening Port |
+
+## Usage
+
+It is recommended to always use the `$TIMEZONE` variable which will set php's `date.timezone`.
+
+**1. Provide FPM port to host**
+```bash
+$ docker run -i \
+    -p 127.0.0.1:9000:9000 \
+    -e TIMEZONE=Europe/Berlin \
+    -t cytopia/php-fpm-5.6
+```
+
+**2. Overwrite php.ini settings**
+
+Mount a PHP config directory from your host into the PHP docker in order to overwrite php.ini settings.
+```bash
+$ docker run -i \
+    -v ~/.etc/php.d:/etc/php-custom.d \
+    -p 127.0.0.1:9000:9000 \
+    -e TIMEZONE=Europe/Berlin \
+    -t cytopia/php-fpm-5.6
+```
+
+
+**3. MySQL connect via localhost (via socket mount)**
+
+Mount a MySQL socket from `~/run/mysqld` (on your host) into the PHP docker.
+By this, your PHP files inside the docker can use `localhost` to connect to a MySQL database.
+
+Note that the `$MYSQL_SOCKET_PATH` (path to file) should match with the folder you mount into the docker.
+```bash
+$ docker run -i \
+    -v ~/run/mysqld:/var/run/mysqld \
+    -p 127.0.0.1:9000:9000 \
+    -e TIMEZONE=Europe/Berlin \
+    -e MOUNT_MYSQL_SOCKET_TO_LOCALDISK=1 \
+    -e MYSQL_SOCKET_PATH=/var/run/mysqld/mysqld.sock \
+    -t cytopia/php-fpm-5.6
+```
+
+**4. MySQL connect via 127.0.0.1 (via port-forward)**
+
+Forward MySQL Port from `172.168.0.30` (or any other IP address/hostname) and Port `3306` to the PHP docker on `127.0.0.1:3306`. By this, your PHP files inside the docker can use `127.0.0.1` to connect to a MySQL database.
+```bash
+$ docker run -i \
+    -p 127.0.0.1:9000:9000 \
+    -e TIMEZONE=Europe/Berlin \
+    -e FORWARD_MYSQL_PORT_TO_LOCALHOST=1 \
+    -e MYSQL_REMOTE_ADDR=172.168.0.30 \
+    -e MYSQL_REMOTE_PORT=3306 \
+    -e MYSQL_LOCAL_PORT=3306 \
+    -t cytopia/php-fpm-5.6
+```
+
