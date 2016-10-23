@@ -168,6 +168,8 @@ script:
   ##
   ## 04.) [a](DEBUG) Custom configuration
   ##
+  - printf "[PHP]\n%s\n" "upload_max_filesize = 2048M" > ${MY_CONFIG_DIR}/custom.ini
+
   - docker run
       -v ${MY_CONFIG_DIR}:/etc/php-custom.d
       -e DEBUG_COMPOSE_ENTRYPOINT=1
@@ -176,7 +178,6 @@ script:
   - docker ps
 
   # Test custom configuration
-  - printf "[PHP]\n%s\n" "upload_max_filesize = 2048M" > ${MY_CONFIG_DIR}/custom.ini
   - docker exec ${MY_DOCKER_NAME} php -r "printf(\"%s\n\", ini_get('upload_max_filesize'));" | grep '2048'
 
   - docker stop "$( docker ps | grep  "${MY_DOCKER_NAME}" | awk '{print $1}' )"
