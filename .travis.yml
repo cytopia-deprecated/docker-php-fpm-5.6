@@ -30,9 +30,9 @@ install:
   # Build my docker
   - docker build -t cytopia/${MY_DOCKER_NAME} .
 
-    # Directory for custom config
-    - mkdir -p ${MY_CONFIG_DIR}
-    - chmod 777 ${MY_CONFIG_DIR}
+  # Directory for custom config
+  - mkdir -p ${MY_CONFIG_DIR}
+  - chmod 777 ${MY_CONFIG_DIR}
 
 
 
