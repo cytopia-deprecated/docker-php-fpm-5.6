@@ -47,11 +47,11 @@ script:
 
   # Check version
   - docker exec ${MY_DOCKER_NAME} php --version | grep "PHP ${MY_VERSION}"
-  # Check xdebug modules
-  - docker exec ${MY_DOCKER_NAME} php -m | grep 'xdebug'
   # PHP-FPM is running?
   - docker exec ${MY_DOCKER_NAME} ps auxw | grep 'php-fpm'
 
+  # Xdebug should be off
+  - if docker exec ${MY_DOCKER_NAME} php -m | grep 'xdebug'; then false; else true; fi
   # Socat should not be running?
   - if docker exec ${MY_DOCKER_NAME} ps auxw | grep 'socat'; then false; else true; fi
   # No Custom Configuration (For this Round)
@@ -71,17 +71,83 @@ script:
 
   # Check version
   - docker exec ${MY_DOCKER_NAME} php --version | grep "PHP ${MY_VERSION}"
-  # Check xdebug modules
-  - docker exec ${MY_DOCKER_NAME} php -m | grep 'xdebug'
   # PHP-FPM is running?
   - docker exec ${MY_DOCKER_NAME} ps auxw | grep 'php-fpm'
 
+  # Xdebug should be off
+  - if docker exec ${MY_DOCKER_NAME} php -m | grep 'xdebug'; then false; else true; fi
   # Socat should not be running?
   - if docker exec ${MY_DOCKER_NAME} ps auxw | grep 'socat'; then false; else true; fi
   # No Custom Configuration (For this Round)
   - if docker exec ${MY_DOCKER_NAME} php --ini | grep -q 'custom.ini'; then && false; else true; fi
   # Check Timezone
   - docker exec ${MY_DOCKER_NAME} php -r "printf(\"%s\n\", ini_get('date.timezone'));" | grep 'UTC'
+
+  - docker stop "$( docker ps | grep  "${MY_DOCKER_NAME}" | awk '{print $1}' )"
+  - docker rm "${MY_DOCKER_NAME}"
+
+
+
+  ##
+  ## 02.) [a](DEBUG) Timezone
+  ##
+  - docker run
+      -e DEBUG_COMPOSE_ENTRYPOINT=1
+      -e TIMEZONE=Europe/Berlin
+      --name ${MY_DOCKER_NAME} cytopia/${MY_DOCKER_NAME} &
+  - sleep 5
+  - docker ps
+
+  # Check Timezone
+  - docker exec ${MY_DOCKER_NAME} php -r "printf(\"%s\n\", ini_get('date.timezone'));" | grep 'Europe/Berlin'
+
+  - docker stop "$( docker ps | grep  "${MY_DOCKER_NAME}" | awk '{print $1}' )"
+  - docker rm "${MY_DOCKER_NAME}"
+  ##
+  ## 02.) [b](SILENT) Timezone
+  ##
+  - docker run
+      -e TIMEZONE=Europe/Berlin
+      --name ${MY_DOCKER_NAME} cytopia/${MY_DOCKER_NAME} &
+  - sleep 5
+  - docker ps
+
+  # Check Timezone
+  - docker exec ${MY_DOCKER_NAME} php -r "printf(\"%s\n\", ini_get('date.timezone'));" | grep 'Europe/Berlin'
+
+  - docker stop "$( docker ps | grep  "${MY_DOCKER_NAME}" | awk '{print $1}' )"
+  - docker rm "${MY_DOCKER_NAME}"
+
+
+
+  ##
+  ## 03.) [a](DEBUG) Xdebug
+  ##
+  - docker run
+      -e DEBUG_COMPOSE_ENTRYPOINT=1
+      -e PHP_XDEBUG_ENABLE=1
+      -e PHP_XDEBUG_REMOTE_HOST=127.0.0.1
+      --name ${MY_DOCKER_NAME} cytopia/${MY_DOCKER_NAME} &
+  - sleep 5
+  - docker ps
+
+  # Check Xdebug Modules
+  - docker exec ${MY_DOCKER_NAME} php -m | grep 'xdebug'
+
+  - docker stop "$( docker ps | grep  "${MY_DOCKER_NAME}" | awk '{print $1}' )"
+  - docker rm "${MY_DOCKER_NAME}"
+  ##
+  ## 03.) [b](SILENT) Xdebug
+  ##
+  - docker run
+      -e PHP_XDEBUG_ENABLE=1
+      -e PHP_XDEBUG_REMOTE_HOST=127.0.0.1
+      --name ${MY_DOCKER_NAME} cytopia/${MY_DOCKER_NAME} &
+  - sleep 5
+  - docker ps
+
+  # Check Xdebug Modules
+  - docker exec ${MY_DOCKER_NAME} php -m | grep 'xdebug'
 
   - docker stop "$( docker ps | grep  "${MY_DOCKER_NAME}" | awk '{print $1}' )"
   - docker rm "${MY_DOCKER_NAME}"
