@@ -46,13 +46,13 @@ script:
   - docker ps
 
   # Check version
-  - docker exec cytopia/${MY_DOCKER_NAME} php --version | grep "PHP ${MY_VERSION}"
+  - docker exec ${MY_DOCKER_NAME} php --version | grep "PHP ${MY_VERSION}"
   # Check xdebug modules
-  - docker exec cytopia/${MY_DOCKER_NAME} php -m | grep 'xdebug'
+  - docker exec ${MY_DOCKER_NAME} php -m | grep 'xdebug'
   # No custom configuration (for this round)
-  - docker exec cytopia/${MY_DOCKER_NAME} php --ini | grep  'custom.ini' && false
+  - docker exec ${MY_DOCKER_NAME} php --ini | grep  'custom.ini' && false
   # PHP-FPM is running?
-  - docker exec cytopia/${MY_DOCKER_NAME} ps auxw | grep 'php-fpm'
+  - docker exec ${MY_DOCKER_NAME} ps auxw | grep 'php-fpm'
 
   - docker stop "$( docker ps | grep  "${MY_DOCKER_NAME}" | awk '{print $1}' )"
   - docker rm "${MY_DOCKER_NAME}"
@@ -65,13 +65,13 @@ script:
   - docker ps
 
   # Check version
-  - docker exec cytopia/${MY_DOCKER_NAME} php --version | grep "PHP ${MY_VERSION}"
+  - docker exec ${MY_DOCKER_NAME} php --version | grep "PHP ${MY_VERSION}"
   # Check xdebug modules
-  - docker exec cytopia/${MY_DOCKER_NAME} php -m | grep 'xdebug'
+  - docker exec ${MY_DOCKER_NAME} php -m | grep 'xdebug'
   # No custom configuration (for this round)
-  - docker exec cytopia/${MY_DOCKER_NAME} php --ini | grep  'custom.ini' && false
+  - docker exec ${MY_DOCKER_NAME} php --ini | grep  'custom.ini' && false
   # PHP-FPM is running?
-  - docker exec cytopia/${MY_DOCKER_NAME} ps auxw | grep 'php-fpm'
+  - docker exec ${MY_DOCKER_NAME} ps auxw | grep 'php-fpm'
 
   - docker stop "$( docker ps | grep  "${MY_DOCKER_NAME}" | awk '{print $1}' )"
   - docker rm "${MY_DOCKER_NAME}"
