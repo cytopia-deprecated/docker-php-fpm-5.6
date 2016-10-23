@@ -18,10 +18,6 @@ env:
     - MY_VERSION="5.6"
     - MY_CONFIG_DIR="/tmp/my-custom-config"
 
-    # Directory for custom config
-    - mkdir -p ${MY_CONFIG_DIR}
-    - chmod 777 ${MY_CONFIG_DIR}
-
 
 ###
 ### Install
@@ -33,6 +29,10 @@ install:
 
   # Build my docker
   - docker build -t cytopia/${MY_DOCKER_NAME} .
+
+    # Directory for custom config
+    - mkdir -p ${MY_CONFIG_DIR}
+    - chmod 777 ${MY_CONFIG_DIR}
 
 
 
@@ -175,6 +175,7 @@ script:
   - sleep 5
   - docker ps
 
+  # Test custom configuration
   - printf "[PHP]\n%s\n" "upload_max_filesize = 2048M" > ${MY_CONFIG_DIR}/custom.ini
   - docker exec ${MY_DOCKER_NAME} php -r "printf(\"%s\n\", ini_get('upload_max_filesize'));" | grep '2048'
 
