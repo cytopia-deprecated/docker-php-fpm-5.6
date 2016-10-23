@@ -214,6 +214,7 @@ script:
   ## 05.) [a](DEBUG) Test MySQL 127.0.0.1 port-forwarding
   ##
   - docker run
+      -e DEBUG_COMPOSE_ENTRYPOINT=1
       -e MYSQL_ROOT_PASSWORD=
       --name mysql cytopia/mysql-5.5 &
   - sleep 15
@@ -233,7 +234,8 @@ script:
   - docker exec ${MY_DOCKER_NAME} ps auxw | grep 'socat'
 
   # Test 127.0.0.1 MySQL connection
-  - docker exec ${MY_DOCKER_NAME} php -r "if (mysqli_connect('127.0.0.1', 'root', '')) echo \"YES\n\"; else echo \"NO\n\";" | grep 'YES'
+  - docker exec ${MY_DOCKER_NAME} php -r "if (@mysqli_connect('127.0.0.1', 'root', '')) echo \"YES\n\"; else echo \"NO\n\";" | grep 'YES'
+  - docker exec ${MY_DOCKER_NAME} php -r "if (@mysqli_connect('localhost', 'root', '')) echo \"YES\n\"; else echo \"NO\n\";" | grep 'NO'
 
   - docker stop "$( docker ps | grep  "mysql" | awk '{print $1}' )"
   - docker stop "$( docker ps | grep  "${MY_DOCKER_NAME}" | awk '{print $1}' )"
@@ -261,7 +263,8 @@ script:
   - docker exec ${MY_DOCKER_NAME} ps auxw | grep 'socat'
 
   # Test 127.0.0.1 MySQL connection
-  - docker exec ${MY_DOCKER_NAME} php -r "if (mysqli_connect('127.0.0.1', 'root', '')) echo \"YES\n\"; else echo \"NO\n\";" | grep 'YES'
+  - docker exec ${MY_DOCKER_NAME} php -r "if (@mysqli_connect('127.0.0.1', 'root', '')) echo \"YES\n\"; else echo \"NO\n\";" | grep 'YES'
+  - docker exec ${MY_DOCKER_NAME} php -r "if (@mysqli_connect('localhost', 'root', '')) echo \"YES\n\"; else echo \"NO\n\";" | grep 'NO'
 
   - docker stop "$( docker ps | grep  "mysql" | awk '{print $1}' )"
   - docker stop "$( docker ps | grep  "${MY_DOCKER_NAME}" | awk '{print $1}' )"
@@ -275,6 +278,7 @@ script:
   ##
   - docker run
       -v ${MY_SOCKET_DIR}:/tmp/mysql-sock
+      -e DEBUG_COMPOSE_ENTRYPOINT=1
       -e MYSQL_ROOT_PASSWORD=
       -e MYSQL_SOCKET_DIR=/tmp/mysql-sock
       --name mysql cytopia/mysql-5.5 &
@@ -290,11 +294,36 @@ script:
   - sleep 5
   - docker ps
 
-  # Check for socat
-  - docker exec ${MY_DOCKER_NAME} ps auxw | grep 'socat'
+  # Test localhost MySQL connection
+  - docker exec ${MY_DOCKER_NAME} php -r "if (@mysqli_connect('localhost', 'root', '')) echo \"YES\n\"; else echo \"NO\n\";" | grep 'YES'
+  - docker exec ${MY_DOCKER_NAME} php -r "if (@mysqli_connect('127.0.0.1', 'root', '')) echo \"YES\n\"; else echo \"NO\n\";" | grep 'NO'
 
-  # Test 127.0.0.1 MySQL connection
-  - docker exec ${MY_DOCKER_NAME} php -r "if (mysqli_connect('localhost', 'root', '')) echo \"YES\n\"; else echo \"NO\n\";" | grep 'YES'
+  - docker stop "$( docker ps | grep  "mysql" | awk '{print $1}' )"
+  - docker stop "$( docker ps | grep  "${MY_DOCKER_NAME}" | awk '{print $1}' )"
+  - docker rm "mysql"
+  - docker rm "${MY_DOCKER_NAME}"
+  ##
+  ## 06.) [b](SILENT) Test MySQL localhost socket mount
+  ##
+  - docker run
+      -v ${MY_SOCKET_DIR}:/tmp/mysql-sock
+      -e MYSQL_ROOT_PASSWORD=
+      -e MYSQL_SOCKET_DIR=/tmp/mysql-sock
+      --name mysql cytopia/mysql-5.5 &
+  - sleep 15
+
+  - docker run
+      -v ${MY_SOCKET_DIR}:/tmp/mysql-sock
+      -e MOUNT_MYSQL_SOCKET_TO_LOCALDISK=1
+      -e MYSQL_SOCKET_PATH=/tmp/mysql-sock/mysqld.sock
+      --link mysql
+      --name ${MY_DOCKER_NAME} cytopia/${MY_DOCKER_NAME} &
+  - sleep 5
+  - docker ps
+
+  # Test localhost MySQL connection
+  - docker exec ${MY_DOCKER_NAME} php -r "if (@mysqli_connect('localhost', 'root', '')) echo \"YES\n\"; else echo \"NO\n\";" | grep 'YES'
+  - docker exec ${MY_DOCKER_NAME} php -r "if (@mysqli_connect('127.0.0.1', 'root', '')) echo \"YES\n\"; else echo \"NO\n\";" | grep 'NO'
 
   - docker stop "$( docker ps | grep  "mysql" | awk '{print $1}' )"
   - docker stop "$( docker ps | grep  "${MY_DOCKER_NAME}" | awk '{print $1}' )"
