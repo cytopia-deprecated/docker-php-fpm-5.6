@@ -49,10 +49,15 @@ script:
   - docker exec ${MY_DOCKER_NAME} php --version | grep "PHP ${MY_VERSION}"
   # Check xdebug modules
   - docker exec ${MY_DOCKER_NAME} php -m | grep 'xdebug'
-  # No custom configuration (for this round)
-  - docker exec ${MY_DOCKER_NAME} php --ini | grep  'custom.ini' && false
   # PHP-FPM is running?
   - docker exec ${MY_DOCKER_NAME} ps auxw | grep 'php-fpm'
+
+  # Socat should not be running?
+  - if docker exec ${MY_DOCKER_NAME} ps auxw | grep 'socat'; then false; else true; fi
+  # No Custom Configuration (For this Round)
+  - if docker exec ${MY_DOCKER_NAME} php --ini | grep -q 'custom.ini'; then && false; else true; fi
+  # Check Timezone
+  - docker exec ${MY_DOCKER_NAME} php -r "printf(\"%s\n\", ini_get('date.timezone'));" | grep 'UTC'
 
   - docker stop "$( docker ps | grep  "${MY_DOCKER_NAME}" | awk '{print $1}' )"
   - docker rm "${MY_DOCKER_NAME}"
@@ -68,10 +73,15 @@ script:
   - docker exec ${MY_DOCKER_NAME} php --version | grep "PHP ${MY_VERSION}"
   # Check xdebug modules
   - docker exec ${MY_DOCKER_NAME} php -m | grep 'xdebug'
-  # No custom configuration (for this round)
-  - docker exec ${MY_DOCKER_NAME} php --ini | grep  'custom.ini' && false
   # PHP-FPM is running?
   - docker exec ${MY_DOCKER_NAME} ps auxw | grep 'php-fpm'
+
+  # Socat should not be running?
+  - if docker exec ${MY_DOCKER_NAME} ps auxw | grep 'socat'; then false; else true; fi
+  # No Custom Configuration (For this Round)
+  - if docker exec ${MY_DOCKER_NAME} php --ini | grep -q 'custom.ini'; then && false; else true; fi
+  # Check Timezone
+  - docker exec ${MY_DOCKER_NAME} php -r "printf(\"%s\n\", ini_get('date.timezone'));" | grep 'UTC'
 
   - docker stop "$( docker ps | grep  "${MY_DOCKER_NAME}" | awk '{print $1}' )"
   - docker rm "${MY_DOCKER_NAME}"
