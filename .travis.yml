@@ -55,7 +55,7 @@ script:
   # Socat should not be running?
   - if docker exec ${MY_DOCKER_NAME} ps auxw | grep 'socat'; then false; else true; fi
   # No Custom Configuration (For this Round)
-  - if docker exec ${MY_DOCKER_NAME} php --ini | grep -q 'custom.ini'; then && false; else true; fi
+  - if docker exec ${MY_DOCKER_NAME} php --ini | grep -q 'custom.ini'; then false; else true; fi
   # Check Timezone
   - docker exec ${MY_DOCKER_NAME} php -r "printf(\"%s\n\", ini_get('date.timezone'));" | grep 'UTC'
 
@@ -79,7 +79,7 @@ script:
   # Socat should not be running?
   - if docker exec ${MY_DOCKER_NAME} ps auxw | grep 'socat'; then false; else true; fi
   # No Custom Configuration (For this Round)
-  - if docker exec ${MY_DOCKER_NAME} php --ini | grep -q 'custom.ini'; then && false; else true; fi
+  - if docker exec ${MY_DOCKER_NAME} php --ini | grep -q 'custom.ini'; then false; else true; fi
   # Check Timezone
   - docker exec ${MY_DOCKER_NAME} php -r "printf(\"%s\n\", ini_get('date.timezone'));" | grep 'UTC'
 
@@ -131,8 +131,11 @@ script:
   - sleep 5
   - docker ps
 
-  # Check Xdebug Modules
+  # Check Xdebug Checks
   - docker exec ${MY_DOCKER_NAME} php -m | grep 'xdebug'
+  - docker exec ${MY_DOCKER_NAME} php -r "printf(\"%s\n\", ini_get('xdebug.default_enable'));" | grep '1'
+  - docker exec ${MY_DOCKER_NAME} php -r "printf(\"%s\n\", ini_get('xdebug.remote_host'));" | grep '127.0.0.1'
+  - docker exec ${MY_DOCKER_NAME} php -r "printf(\"%s\n\", ini_get('xdebug.remote_port'));" | grep '9000'
 
   - docker stop "$( docker ps | grep  "${MY_DOCKER_NAME}" | awk '{print $1}' )"
   - docker rm "${MY_DOCKER_NAME}"
@@ -146,8 +149,11 @@ script:
   - sleep 5
   - docker ps
 
-  # Check Xdebug Modules
+  # Check Xdebug Checks
   - docker exec ${MY_DOCKER_NAME} php -m | grep 'xdebug'
+  - docker exec ${MY_DOCKER_NAME} php -r "printf(\"%s\n\", ini_get('xdebug.default_enable'));" | grep '1'
+  - docker exec ${MY_DOCKER_NAME} php -r "printf(\"%s\n\", ini_get('xdebug.remote_host'));" | grep '127.0.0.1'
+  - docker exec ${MY_DOCKER_NAME} php -r "printf(\"%s\n\", ini_get('xdebug.remote_port'));" | grep '9000'
 
   - docker stop "$( docker ps | grep  "${MY_DOCKER_NAME}" | awk '{print $1}' )"
   - docker rm "${MY_DOCKER_NAME}"
