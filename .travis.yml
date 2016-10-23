@@ -1,0 +1,77 @@
+language: python
+python:
+  - 2.7
+
+###
+### Add services
+###
+services:
+  - docker
+
+
+###
+### Global variables
+###
+env:
+  global:
+    - MY_DOCKER_NAME="my-php-docker"
+    - MY_VERSION="5.6"
+
+
+###
+### Install
+###
+install:
+
+  # Show Docker version
+  - docker version
+
+  # Build my docker
+  - docker build -t cytopia/${MY_DOCKER_NAME} .
+
+
+
+###
+### Test
+###
+script:
+
+  ##
+  ## 01.) [a](DEBUG) Test plain docker
+  ##
+  - docker run
+      -e DEBUG_COMPOSE_ENTRYPOINT=1
+      --name ${MY_DOCKER_NAME} cytopia/${MY_DOCKER_NAME} &
+  - sleep 5
+  - docker ps
+
+  # Check version
+  - docker exec cytopia/${MY_DOCKER_NAME} php --version | grep "PHP ${MY_VERSION}"
+  # Check xdebug modules
+  - docker exec cytopia/${MY_DOCKER_NAME} php -m | grep 'xdebug'
+  # No custom configuration (for this round)
+  - docker exec cytopia/${MY_DOCKER_NAME} php --ini | grep  'custom.ini' && false
+  # PHP-FPM is running?
+  - docker exec cytopia/${MY_DOCKER_NAME} ps auxw | grep 'php-fpm'
+
+  - docker stop "$( docker ps | grep  "${MY_DOCKER_NAME}" | awk '{print $1}' )"
+  - docker rm "${MY_DOCKER_NAME}"
+  ##
+  ## 01.) [b](SILENT) Test plain docker
+  ##
+  - docker run
+      --name ${MY_DOCKER_NAME} cytopia/${MY_DOCKER_NAME} &
+  - sleep 5
+  - docker ps
+
+  # Check version
+  - docker exec cytopia/${MY_DOCKER_NAME} php --version | grep "PHP ${MY_VERSION}"
+  # Check xdebug modules
+  - docker exec cytopia/${MY_DOCKER_NAME} php -m | grep 'xdebug'
+  # No custom configuration (for this round)
+  - docker exec cytopia/${MY_DOCKER_NAME} php --ini | grep  'custom.ini' && false
+  # PHP-FPM is running?
+  - docker exec cytopia/${MY_DOCKER_NAME} ps auxw | grep 'php-fpm'
+
+  - docker stop "$( docker ps | grep  "${MY_DOCKER_NAME}" | awk '{print $1}' )"
+  - docker rm "${MY_DOCKER_NAME}"
