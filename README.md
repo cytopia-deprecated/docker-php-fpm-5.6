@@ -1,5 +1,7 @@
 # PHP-FPM 5.6 Docker
 
+<small>**Latest build:** 2017-04-14</small>
+
 [![Build Status](https://travis-ci.org/cytopia/docker-php-fpm-5.6.svg?branch=master)](https://travis-ci.org/cytopia/docker-php-fpm-5.6) [![](https://images.microbadger.com/badges/version/cytopia/php-fpm-5.6.svg)](https://microbadger.com/images/cytopia/php-fpm-5.6 "php-fpm-5.6") [![](https://images.microbadger.com/badges/image/cytopia/php-fpm-5.6.svg)](https://microbadger.com/images/cytopia/php-fpm-5.6 "php-fpm-5.6") [![](https://images.microbadger.com/badges/license/cytopia/php-fpm-5.6.svg)](https://microbadger.com/images/cytopia/php-fpm-5.6 "php-fpm-5.6")
 
 [![cytopia/php-fpm-5.6](http://dockeri.co/image/cytopia/php-fpm-5.6)](https://hub.docker.com/r/cytopia/php-fpm-5.6/)
