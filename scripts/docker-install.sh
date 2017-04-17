@@ -5,7 +5,6 @@
 ###
 PHP_FPM_POOL_CONF="/etc/php-fpm.d/www.conf"
 PHP_FPM_CONF="/etc/php-fpm.conf"
-PHP_FPM_LOG_DIR="/var/log/php-fpm"
 
 # Custom php directory to look for *.ini files
 PHP_CUST_CONF_DIR="/etc/php-custom.d"

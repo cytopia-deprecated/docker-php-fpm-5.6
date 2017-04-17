@@ -27,6 +27,7 @@ ENV MY_UID="48"
 ENV MY_GID="48"
 
 # Log files
+ENV PHP_FPM_LOG_DIR="/var/log/php-fpm"
 ENV PHP_FPM_POOL_LOG_ERR="/var/log/php-fpm/www-error.log"
 ENV PHP_FPM_POOL_LOG_ACC="/var/log/php-fpm/www-access.log"
 ENV PHP_FPM_POOL_LOG_SLOW="/var/log/php-fpm/www-slow.log"

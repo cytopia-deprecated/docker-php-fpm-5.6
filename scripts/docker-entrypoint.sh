@@ -151,7 +151,7 @@ else
 	if [ "${DOCKER_LOGS_ACCESS}" = "1" ]; then
 		log "info" "Logging access to docker logs"
 
-		run "ln -sf /proc/self/fd/1 ${PHP_FPM_POOL_LOG_ACC}"
+		run "ln -sf /proc/self/fd/2 ${PHP_FPM_POOL_LOG_ACC}"
 
 	# ---- 2/3 Disabled
 	elif [ "${DOCKER_LOGS_ACCESS }" = "0" ]; then
@@ -185,7 +185,7 @@ else
 	if [ "${DOCKER_LOGS_XDEBUG}" = "1" ]; then
 		log "info" "Logging xdebug to docker logs"
 
-		run "ln -sf /proc/self/fd/1 ${PHP_LOG_XDEBUG}"
+		run "ln -sf /proc/self/fd/2 ${PHP_LOG_XDEBUG}"
 
 	# ---- 2/3 Disabled
 	elif [ "${DOCKER_LOGS_XDEBUG}" = "0" ]; then
@@ -483,6 +483,12 @@ else
 fi
 
 
+
+###
+### Fix logdir/file
+###
+run "chmod 0777 ${PHP_FPM_LOG_DIR}"
+run "find ${PHP_FPM_LOG_DIR} -type f -exec chmod 0666 {} \;"
 
 
 
