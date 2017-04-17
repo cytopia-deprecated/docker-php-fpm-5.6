@@ -50,7 +50,7 @@ print_headline "5. Configure php.ini"
 # Fix fix_pathinfo (security precaution for php-fpm)
 run "sed -i'' 's/^;cgi.fix_pathinfo=1/cgi.fix_pathinfo = 0/g' /etc/php.ini"
 grep -q '^cgi.fix_pathinfo = 0$' /etc/php.ini
-if [ "$( grep -c '^cgi.fix_pathinfo = 0$' /etc/php.ini )" != "1" ]; then
+if [ "$( grep -c '^cgi.fix_pathinfo[[:space:]]*=' /etc/php.ini )" != "1" ]; then
 	exit 1
 fi
 
