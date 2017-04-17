@@ -106,7 +106,6 @@ else
 		log "info" "Logging errors to docker logs"
 
 		run "ln -sf /proc/self/fd/2 ${PHP_FPM_LOG_ERR}"
-		run "ln -sf /proc/self/fd/2 ${PHP_LOG_ERR}"
 		run "ln -sf /proc/self/fd/2 ${PHP_FPM_POOL_LOG_ERR}"
 		run "ln -sf /proc/self/fd/2 ${PHP_FPM_POOL_LOG_SLOW}"
 
@@ -118,11 +117,6 @@ else
 			run "rm -f ${PHP_FPM_LOG_ERR}"
 			run "touch ${PHP_FPM_LOG_ERR}"
 			run "chmod 666 ${PHP_FPM_LOG_ERR}"
-		fi
-		if [ -L "${PHP_LOG_ERR}" ]; then
-			run "rm -f ${PHP_LOG_ERR}"
-			run "touch ${PHP_LOG_ERR}"
-			run "chmod 666 ${PHP_LOG_ERR}"
 		fi
 		if [ -L "${PHP_FPM_POOL_LOG_ERR}" ]; then
 			run "rm -f ${PHP_FPM_POOL_LOG_ERR}"
@@ -496,4 +490,4 @@ fi
 ### Start
 ###
 log "info" "Starting $(php-fpm -v 2>&1 | head -1)"
-exec /usr/sbin/php-fpm
+exec /usr/sbin/php-fpm --force-stderr

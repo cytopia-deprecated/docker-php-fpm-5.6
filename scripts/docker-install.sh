@@ -47,59 +47,6 @@ run() {
 ###
 print_headline "5. Configure php.ini"
 
-# Enable PHP logging to file
-run "sed -i'' 's|^;error_log\s*=\s*syslog|error_log = ${PHP_LOG_ERR}|g' /etc/php.ini"
-grep -q "^error_log = ${PHP_LOG_ERR}$" /etc/php.ini
-if [ "$( grep -c '^error_log[[:space:]]*=' /etc/php.ini )" != "1" ]; then
-	exit 1
-fi
-
-# Enable PHP unlimited max length for errors
-run "sed -i'' 's|^log_errors_max_len[[:space:]]*=.*$|log_errors_max_len = 0|g' /etc/php.ini"
-grep -q "^log_errors_max_len = 0$" /etc/php.ini
-if [ "$( grep -c '^log_errors_max_len[[:space:]]*=' /etc/php.ini )" != "1" ]; then
-	exit 1
-fi
-
-# Set log level
-if grep -q '^error_reporting[[:space:]]*=' /etc/php.ini; then
-	run "sed -i'' 's|error_reporting[[:space:]]*=.*$|error_reporting = E_ALL|g' /etc/php.ini"
-elif grep -q '^;error_reporting[[:space:]]*=' /etc/php.ini; then
-	run "sed -i'' 's|;error_reporting[[:space:]]*=.*$|error_reporting = E_ALL|g' /etc/php.ini"
-else
-	exit 1
-fi
-grep -q '^error_reporting = E_ALL$' /etc/php.ini
-if [ "$( grep -c '^error_reporting[[:space:]]*=' /etc/php.ini )" != "1" ]; then
-	exit 1
-fi
-
-# Set display errors
-if grep -q '^display_errors[[:space:]]*=' /etc/php.ini; then
-	run "sed -i'' 's|display_errors[[:space:]]*=.*$|display_errors = On|g' /etc/php.ini"
-elif grep -q '^display_errors[[:space:]]*=' /etc/php.ini; then
-	run "sed -i'' 's|;display_errors[[:space:]]*=.*$|display_errors = On|g' /etc/php.ini"
-else
-	exit 1
-fi
-grep -q '^display_errors = On$' /etc/php.ini
-if [ "$( grep -c '^display_errors[[:space:]]*=' /etc/php.ini )" != "1" ]; then
-	exit 1
-fi
-
-# Set display startup errors
-if grep -q '^display_startup_errors[[:space:]]*=' /etc/php.ini; then
-	run "sed -i'' 's|display_startup_errors[[:space:]]*=.*$|display_startup_errors = On|g' /etc/php.ini"
-elif grep -q '^display_startup_errors[[:space:]]*=' /etc/php.ini; then
-	run "sed -i'' 's|;display_startup_errors[[:space:]]*=.*$|display_startup_errors = On|g' /etc/php.ini"
-else
-	exit 1
-fi
-grep -q '^display_startup_errors = On$' /etc/php.ini
-if [ "$( grep -c '^display_startup_errors[[:space:]]*=' /etc/php.ini )" != "1" ]; then
-	exit 1
-fi
-
 # Fix fix_pathinfo (security precaution for php-fpm)
 run "sed -i'' 's/^;cgi.fix_pathinfo=1/cgi.fix_pathinfo = 0/g' /etc/php.ini"
 grep -q '^cgi.fix_pathinfo = 0$' /etc/php.ini
@@ -352,9 +299,6 @@ fi
 ###
 if [ ! -d "${PHP_FPM_LOG_DIR}" ]; then
 	run "mkdir -p ${PHP_FPM_LOG_DIR}"
-fi
-if [ ! -f "${PHP_LOG_ERR}" ]; then
-	touch "${PHP_LOG_ERR}"
 fi
 if [ ! -f "${PHP_LOG_XDEBUG}" ]; then
 	touch "${PHP_LOG_XDEBUG}"

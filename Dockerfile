@@ -31,7 +31,6 @@ ENV PHP_FPM_POOL_LOG_ERR="/var/log/php-fpm/www-error.log"
 ENV PHP_FPM_POOL_LOG_ACC="/var/log/php-fpm/www-access.log"
 ENV PHP_FPM_POOL_LOG_SLOW="/var/log/php-fpm/www-slow.log"
 ENV PHP_FPM_LOG_ERR="/var/log/php-fpm/php-fpm.err"
-ENV PHP_LOG_ERR="/var/log/php-fpm/php.err"
 ENV PHP_LOG_XDEBUG="/var/log/php-fpm/xdebug.log"
 
 
