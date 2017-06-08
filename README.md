@@ -1,6 +1,6 @@
 # PHP-FPM 5.6 Docker
 
-<small>**Latest build:** 2017-05-22</small>
+<small>**Latest build:** 2017-06-07</small>
 
 [![Build Status](https://travis-ci.org/cytopia/docker-php-fpm-5.6.svg?branch=master)](https://travis-ci.org/cytopia/docker-php-fpm-5.6) [![](https://images.microbadger.com/badges/version/cytopia/php-fpm-5.6.svg)](https://microbadger.com/images/cytopia/php-fpm-5.6 "php-fpm-5.6") [![](https://images.microbadger.com/badges/image/cytopia/php-fpm-5.6.svg)](https://microbadger.com/images/cytopia/php-fpm-5.6 "php-fpm-5.6") [![](https://images.microbadger.com/badges/license/cytopia/php-fpm-5.6.svg)](https://microbadger.com/images/cytopia/php-fpm-5.6 "php-fpm-5.6")
 
@@ -185,7 +185,7 @@ Xdebug, Zend OPcache
 |----------------|---------|
 | composer       | 1.4.2 |
 | drush          | 8.1.11 |
-| drupal-console | 1.0.0-rc19 |
+| drupal-console | 1.0.0-rc21 |
 | git            | 1.8.3.1 |
-| node           | 6.10.2 |
+| node           | 6.10.3 |
 | npm            | 3.10.10 |
