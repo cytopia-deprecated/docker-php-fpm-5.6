@@ -1,6 +1,6 @@
 # PHP-FPM 5.6 Docker
 
-<small>**Latest build:** 2017-06-27</small>
+<small>**Latest build:** 2017-07-23</small>
 
 [![Build Status](https://travis-ci.org/cytopia/docker-php-fpm-5.6.svg?branch=master)](https://travis-ci.org/cytopia/docker-php-fpm-5.6) [![](https://images.microbadger.com/badges/version/cytopia/php-fpm-5.6.svg)](https://microbadger.com/images/cytopia/php-fpm-5.6 "php-fpm-5.6") [![](https://images.microbadger.com/badges/image/cytopia/php-fpm-5.6.svg)](https://microbadger.com/images/cytopia/php-fpm-5.6 "php-fpm-5.6") [![](https://images.microbadger.com/badges/license/cytopia/php-fpm-5.6.svg)](https://microbadger.com/images/cytopia/php-fpm-5.6 "php-fpm-5.6")
 
@@ -169,10 +169,11 @@ $ docker run -d \
 
 **[Version]**
 
-PHP 5.6.30 (cli) (built: Jan 19 2017 07:57:06)
+PHP 5.6.31 (cli) (built: Jul  6 2017 08:06:11)
 Copyright (c) 1997-2016 The PHP Group
 Zend Engine v2.6.0, Copyright (c) 1998-2016 Zend Technologies
     with Zend OPcache v7.0.6-dev, Copyright (c) 1999-2016, by Zend Technologies
+    with Xdebug v2.5.5, Copyright (c) 2002-2017, by Derick Rethans
 
 **[PHP Modules]**
 
@@ -187,10 +188,10 @@ Xdebug, Zend OPcache
 | tool           | version |
 |----------------|---------|
 | [composer](https://getcomposer.org)    | 1.4.2 |
-| [drupal-console](https://drupalconsole.com) | 1.0.0-rc23 |
+| [drupal-console](https://drupalconsole.com) | 1.0.0-rc25 |
 | [drush](http://www.drush.org)          | 8.1.12 |
 | [git](https://git-scm.com)             | 1.8.3.1 |
-| [laravel installer](https://github.com/laravel/installer)     | 1.3.6 |
+| [laravel installer](https://github.com/laravel/installer)     | 1.3.7 |
 | [mysqldump-secure](https://mysqldump-secure.org) | 0.16.3 |
 | [node](https://nodejs.org)             | 6.10.3 |
 | [npm](https://www.npmjs.com)           | 3.10.10 |
