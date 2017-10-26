@@ -157,8 +157,6 @@ RUN yum -y update && \
 		devscripts-minimal \
 		dos2unix \
 		file \
-		git \
-		git-svn \
 		hostname \
 		htop \
 		ImageMagick \
@@ -202,6 +200,50 @@ RUN yum -y update && \
 	yum clean all && \
 	(rm /var/cache/yum/x86_64/7/timedhosts 2>/dev/null || true) && \
 	(rm /var/cache/yum/x86_64/7/timedhosts.txt 2>/dev/null || true)
+
+# Update git dependencies
+RUN yum -y update && \
+	while true; do \
+		if yum -y install \
+		curl-devel \
+		expat-devel \
+		gettext-devel \
+		openssl-devel \
+		zlib-devel \
+		gcc \
+		perl-ExtUtils-MakeMaker \
+		; then \
+			break; \
+		else \
+			yum clean metadata && \
+			yum clean all && \
+			(rm /var/cache/yum/x86_64/7/timedhosts 2>/dev/null || true) && \
+			(rm /var/cache/yum/x86_64/7/timedhosts.txt 2>/dev/null || true) && \
+			yum -y update; \
+		fi \
+	done \
+	\
+	&& \
+	\
+	yum -y autoremove && \
+	yum clean metadata && \
+	yum clean all && \
+	(rm /var/cache/yum/x86_64/7/timedhosts 2>/dev/null || true) && \
+	(rm /var/cache/yum/x86_64/7/timedhosts.txt 2>/dev/null || true)
+
+# Extend with custom git version
+RUN \
+	mkdir -p /usr/local/src && \
+	chown ${MY_USER}:${MY_GROUP} /usr/local/src && \
+	wget -P /usr/local/src https://www.kernel.org/pub/software/scm/git/git-2.14.3.tar.gz && \
+	tar xzf /usr/local/src/git-2.14.3.tar.gz -C /usr/local/src && \
+	make -C /usr/local/src/git-2.14.3 prefix=/usr/local all && \
+	make -C /usr/local/src/git-2.14.3 prefix=/usr/local install && \
+	rm -rf /usr/local/src/git-2.14.3 && \
+	rm /usr/local/src/git-2.14.3.tar.gz
+
+
+ENV PATH="/usr/local/git/bin:${PATH}"
 
 # Node / NPM
 RUN \
